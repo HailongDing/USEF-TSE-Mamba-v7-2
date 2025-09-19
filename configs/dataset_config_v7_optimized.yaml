@@ -1,0 +1,115 @@
+# USEF-TSE-Mamba V7 Optimized Dataset Configuration
+# Balanced for efficiency and performance
+
+# Dataset paths
+paths:
+  # LibriSpeech dataset location
+  librispeech_root: /data/LibriSpeech
+  librispeech_splits:
+    train:
+      - train-clean-100    # 250 speakers, high quality
+      - train-clean-360    # 920 speakers, more diversity
+      - train-other-500    # 1160 speakers, maximum diversity (optional)
+    validation:
+      - dev-clean          # 40 speakers (separate from train)
+    test:
+      - test-clean         # 40 speakers (completely held out)
+
+  # WHAM noise dataset location
+  wham_noise_root: /data/wham_noise
+  wham_splits:
+    train: tr
+    validation: cv
+    test: tt
+
+  # Output dataset location
+  output_root: /data/tse_audio_dataset_v7_optimized
+
+  # Metadata output directory (inside dataset folder)
+  metadata_dir: /data/tse_audio_dataset_v7_optimized/metadata
+
+# OPTIMIZED Dataset sizes
+dataset_sizes:
+  train: 30000         # 50% increase for better convergence
+  validation: 2000     # Reduced by 60% - still statistically significant
+  test: 1000          # Reduced by 67% - sufficient for evaluation
+
+# Audio parameters - Extended for better temporal context
+audio:
+  sample_rate: 8000
+  duration: 6.0       # Extended mixture duration
+  ref_duration: 4.0   # Extended reference duration
+
+  # Audio normalization
+  normalize: true
+  target_loudness: -20.0
+
+# Mixing parameters with MORE VARIETY
+mixing:
+  # Wider SNR range for better generalization
+  snr_range: [-5, 15]      # Extended from [0, 10]
+
+  # More varied noise conditions
+  noise_snr_range: [-10, 20]  # Extended from [0, 10]
+
+  # Higher noise probability for robustness
+  add_noise_prob: 0.9      # Increased from 0.8
+
+  # Energy-based filtering
+  min_energy_threshold: 0.001
+
+# Speaker selection strategy - IMPROVED
+speaker_selection:
+  # Minimum utterances per speaker
+  min_utterances_per_speaker: 3    # Reduced from 5 for more speakers
+
+  # Speaker gender balancing
+  balance_gender: true
+
+  # Ensure different speakers for target and interference
+  different_speakers: true
+
+  # Use different utterances for target and reference
+  different_utterances: true
+
+  # NEW: Speaker reuse limits
+  max_speaker_appearances: 100     # Limit how often each speaker appears
+  prefer_unseen_combinations: true # Prioritize new speaker pairs
+
+# Metadata generation
+metadata:
+  include_speaker_info: true
+  include_gender_info: true
+  include_snr_values: true
+  include_duration: true
+  include_utterance_ids: true
+  format: csv
+  generate_statistics: true
+
+# Processing parameters
+processing:
+  random_seed: 42
+
+# Validation parameters
+validation:
+  validate_audio: true
+
+# Logging
+logging:
+  level: INFO
+  log_file: ./logs/dataset_generation_v7_optimized.log
+  report_interval: 100
+
+# Advanced options
+advanced:
+  use_alignments: false
+  filter_by_transcript: false
+  min_words: 3
+  max_words: 25
+  cache_speaker_info: true
+  cache_dir: ./cache_v7_optimized
+  audio_format: wav
+
+  # NEW: Dynamic generation options
+  enable_on_the_fly: true        # Support on-the-fly generation
+  precompute_augmentations: 3    # Pre-generate N augmented versions

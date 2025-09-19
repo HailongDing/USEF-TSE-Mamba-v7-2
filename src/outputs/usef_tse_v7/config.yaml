@@ -1,0 +1,103 @@
+data:
+  batch_size: 2
+  data_root: /data/tse_audio_dataset_v6
+  default_noise_snr: 10.0
+  default_speaker_snr: 5.0
+  drop_last_train: true
+  memory_safe_mode: true
+  metadata_path: /data/metadata_v6
+  normalize: false
+  normalize_scale: 0.95
+  num_workers: 12
+  persistent_workers: true
+  pin_memory: true
+  prefetch_factor: 3
+  ref_length_max: 2.5
+  ref_length_min: 2.5
+  ref_length_strategy: adaptive
+  sample_rate: 8000
+  segment_length: 4.0
+  use_metadata: true
+  use_variable_ref: false
+evaluation:
+  compute_pesq: false
+  compute_sar: true
+  compute_sdr: true
+  compute_sir: true
+  compute_stoi: false
+  num_save_samples: 10
+  save_audio: true
+inference:
+  batch_inference: true
+  chunk_overlap: 0.5
+  chunk_size: null
+  device_map: auto
+logging:
+  log_interval: 50
+  save_interval: 5
+  use_tensorboard: true
+model:
+  activation: silu
+  attention_dropout: 0.15
+  attention_temperature: 1.0
+  dim: 128
+  dropout: 0.2
+  kernel_sizes:
+  - 16
+  - 16
+  - 16
+  num_blocks: 6
+  num_heads: 8
+  strides:
+  - 2
+  - 2
+  - 2
+  use_bottleneck_attention_only: true
+  use_layer_norm: true
+  use_residual: true
+optimizer:
+  betas:
+  - 0.9
+  - 0.999
+  label_smoothing: 0.1
+  learning_rate: 0.0001
+  type: adamw
+  weight_decay: 0.05
+paths:
+  checkpoint_dir: ./checkpoints/usef_tse_v7
+  output_dir: ./outputs/usef_tse_v7
+scheduler:
+  T_0: 10
+  T_mult: 2
+  eta_min: 1.0e-06
+  factor: 0.5
+  patience: 10
+  type: cosine_annealing_warm_restarts
+training:
+  augmentation:
+    freq_mask_param: 15
+    mixup_alpha: 0.2
+    noise_augment: true
+    noise_snr_range:
+    - -5
+    - 15
+    spec_augment: true
+    speed_perturb: 0.1
+    time_mask_param: 20
+  early_stopping:
+    enabled: true
+    min_delta: 0.001
+    mode: max
+    monitor: val_si_sdri
+    patience: 15
+  ema_decay: 0.999
+  ema_update_every: 10
+  grad_clip: 5.0
+  gradient_accumulation: 4
+  mixed_precision: true
+  num_epochs: 150
+  use_augmentation: true
+  use_ema: true
+  warmup_epochs: 5
+  warmup_start_lr: 1.0e-05
+use_multi_gpu: false
